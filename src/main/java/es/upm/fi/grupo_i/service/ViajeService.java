@@ -1,5 +1,6 @@
 package es.upm.fi.grupo_i.service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,18 +28,18 @@ public class ViajeService {
         return new ArrayList<>(ViajeRepository.findAll());
     }
 
-    public Page<Viaje> obtenerTodosViajes(String nombre, Pageable pageable) {
-        if (nombre != null && !nombre.trim().isEmpty()) {
-            return ViajeRepository.findByNombreContainingIgnoreCase(nombre, pageable);
+    public Page<Viaje> buscarViajes(String origen, String destino, LocalDate fecha, Pageable pageable) {
+        if (origen != null && !origen.trim().isEmpty() && destino != null && !destino.trim().isEmpty()) {
+            return ViajeRepository.findByOrigenContainingIgnoreCase(origen, destino, fecha, pageable); 
         }
         return ViajeRepository.findAll(pageable);
     }
 
-    public Optional<Viaje> obtenerViaje(long id) {
+    public Optional<Viaje> getViaje(long id) {
         return ViajeRepository.findById(id);
     }
 
-    public void anadirViaje(Viaje viaje) throws Exception {
+    public void crearViaje(Viaje viaje) throws Exception {
         if (viaje.getId() != null) {
             throw new ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
@@ -46,5 +47,9 @@ public class ViajeService {
             );
         }
         ViajeRepository.save(viaje);
+    }
+
+    public void cancelar(){ //TODO
+
     }
 }
