@@ -9,14 +9,14 @@ import es.upm.fi.grupo_i.enums.ESTADO_VIAJE;
 
 public class ViajeDto {
     private Long id;
-    private Long conductor_id;
+    private Long conductorId;
     private String origen;
     private String destino;
     private List<String> paradas;
-    private int plazas_disponibles;
+    private int plazasDisponibles;
     private Precio precio;
-    private LocalDate fecha_salida;
-    private LocalTime hora_salida;
-    private int duracion_estimada;
+    private LocalDate fechaSalida;
+    private LocalTime horaSalida;
+    private int duracionEstimada;
     private ESTADO_VIAJE estado;
 }

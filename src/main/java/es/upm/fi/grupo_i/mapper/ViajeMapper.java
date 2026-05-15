@@ -17,26 +17,6 @@ public abstract class ViajeMapper {
     protected ViajeService viajeService;
 
     //Se conectan tipos y nombres de las variables entre Viaje y ViajeDto
-    @Mapping(
-            source = "conductorId",
-            target = "conductor_id"
-    )
-    @Mapping(
-            source = "plazasDisponibles",
-            target = "plazas_disponibles"
-    )
-    @Mapping(
-            source = "fechaSalida",
-            target = "fecha_salida"
-    )
-    @Mapping(
-            source = "horaSalida",
-            target = "hora_salida"
-    )
-    @Mapping(
-            source = "duracionEstimada",
-            target = "duracion_estimada"
-    )
 
     public abstract ViajeDto toDto(Viaje viaje);
 
