@@ -10,31 +10,31 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.upm.fi.grupo_i.model.Reserva;
-import es.upm.fi.grupo_i.service.ReservasService;
+import es.upm.fi.grupo_i.service.ReservaService;
 
 @RestController
 public class ReservasController {
 
-    private final ReservasService reservasService;
+    private final ReservaService reservaService;
 
-    public ReservasController(ReservasService reservasService) {
-        this.reservasService = reservasService;
+    public ReservasController(ReservaService reservaService) {
+        this.reservaService = reservaService;
     }
 
     @GetMapping("/reservas/{id}")
     public Reserva obtenerReserva(@PathVariable Long id) {
-        return reservasService.obtenerReserva(id);
+        return reservaService.obtenerReserva(id);
     }
 
     @PostMapping("/reservas")
     @ResponseStatus(HttpStatus.CREATED)
     public Reserva crearReserva(@RequestBody Reserva reserva) {
-        return reservasService.procesarReserva(reserva);
+        return reservaService.procesarReserva(reserva);
     }
 
     @DeleteMapping("/reservas/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void cancelarReserva(@PathVariable Long id) {
-        reservasService.cancelarReserva(id);
+        reservaService.cancelarReserva(id);
     }
 }
