@@ -18,11 +18,11 @@ public class Resenya {
     private int puntuacion;
     private String comentario;
 
-    private Resenya() {
+    protected Resenya() {
         // Constructor vacío para JPA
     }
 
-    private Resenya(Long viaje_id, Long autor_id, int puntuacion, String comentario) {
+    public Resenya(Long viaje_id, Long autor_id, int puntuacion, String comentario) {
         this.viaje_id = viaje_id;
         this.autor_id = autor_id;
         this.puntuacion = puntuacion;

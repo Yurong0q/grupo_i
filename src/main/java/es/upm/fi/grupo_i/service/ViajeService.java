@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import es.upm.fi.grupo_i.enums.ESTADO_VIAJE;
 import es.upm.fi.grupo_i.model.Viaje;
 import es.upm.fi.grupo_i.repository.ViajeRepository;
 
@@ -61,8 +62,18 @@ public class ViajeService {
                 "No existe un viaje con id " + id
             ));
 
-        viaje.cancelar();
+        viaje.setEstado(ESTADO_VIAJE.CANCELADO);
         viajeRepository.save(viaje);
+    }
+
+    public boolean comprobarViajeFinalizado(Long id) {
+        Viaje viaje = viajeRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "No existe un viaje con id " + id
+            ));
+
+        return viaje.getEstado() == ESTADO_VIAJE.FINALIZADO;
     }
 
 }
