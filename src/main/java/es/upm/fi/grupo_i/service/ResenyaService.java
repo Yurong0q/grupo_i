@@ -22,17 +22,17 @@ public class ResenyaService {
 
     public Resenya registrarResenya(Long viajeId, Long autorId, int puntuacion, String comentario) {
 
-        // if (!viajeService.comprobarViajeFinalizado(viajeId)) {
-        //     throw new ResponseStatusException(
-        //         HttpStatus.BAD_REQUEST,
-        //         "No se puede reseñar un viaje que no ha finalizado");
-        // }
+        if (!viajeService.comprobarViajeFinalizado(viajeId)) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "No se puede reseñar un viaje que no ha finalizado");
+        }
 
-        // if (!reservaService.comprobarReservaValida(viajeId, autorId)) {
-        //     throw new ResponseStatusException(
-        //     HttpStatus.BAD_REQUEST,
-        //     "El usuario no tiene una reserva válida para este viaje");
-        // }
+        if (!reservaService.comprobarReservaValida(viajeId, autorId)) {
+            throw new ResponseStatusException(
+            HttpStatus.BAD_REQUEST,
+            "El usuario no tiene una reserva válida para este viaje");
+        }
 
         if (puntuacion < 0 || puntuacion > 10) {
             throw new ResponseStatusException(
