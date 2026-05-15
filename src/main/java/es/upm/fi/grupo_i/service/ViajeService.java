@@ -16,9 +16,11 @@ import es.upm.fi.grupo_i.repository.ViajeRepository;
 public class ViajeService {
 
     private final ViajeRepository viajeRepository;
+    private final NotificacionesFake notificacionesFake;
 
-    public ViajeService(ViajeRepository viajeRepository) {
+    public ViajeService(ViajeRepository viajeRepository, NotificacionesFake notificacionesFake) {
         this.viajeRepository = viajeRepository;
+        this.notificacionesFake = notificacionesFake;
     }
 
     // Todos los viajes
@@ -73,8 +75,23 @@ public class ViajeService {
                 HttpStatus.BAD_REQUEST,
                 "La duración estimada debe ser un valor positivo"
             );
-        }        
+        }    
 
+        if (viaje.getPlazasDisponibles() <= 0) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "El número de plazas disponibles debe ser un valor positivo"
+            );
+        }
+
+        if (viaje.getPrecio().getCantidad() < 0) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "El precio no puede ser negativo"
+            );
+        }
+
+        notificacionesFake.notificarViajeCreado(viaje.getId());
         return viajeRepository.save(viaje);
     }
 
@@ -86,6 +103,7 @@ public class ViajeService {
             ));
 
         viaje.setEstado(ESTADO_VIAJE.CANCELADO);
+        notificacionesFake.notificarCancelacionViaje(id);
         viajeRepository.save(viaje);
     }
 

@@ -16,4 +16,8 @@ public class NotificacionesFake {
     public void notificarCancelacionViaje(Long idViaje) {
         System.out.println("Notificacion fake: viaje cancelado " + idViaje);
     }
+
+    public void notificarViajeCreado(Long idViaje) {
+        System.out.println("Notificacion fake: viaje creado " + idViaje);
+    }
 }
