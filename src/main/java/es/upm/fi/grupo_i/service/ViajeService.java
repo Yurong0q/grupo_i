@@ -30,7 +30,7 @@ public class ViajeService {
 
     public Page<Viaje> buscarViajes(String origen, String destino, LocalDate fecha, Pageable pageable) {
         if (origen != null && !origen.trim().isEmpty() && destino != null && !destino.trim().isEmpty()) {
-            return ViajeRepository.findByOrigenContainingIgnoreCase(origen, destino, fecha, pageable); 
+            return ViajeRepository.findByOrigenAndDestino(origen, destino, fecha, pageable); 
         }
         return ViajeRepository.findAll(pageable);
     }
@@ -49,7 +49,18 @@ public class ViajeService {
         ViajeRepository.save(viaje);
     }
 
-    public void cancelar(){ //TODO
-
+    public void cancelarViaje(long id){ 
+        Optional<Viaje> viajeOpt = ViajeRepository.findById(id);
+        if (viajeOpt.isPresent()) {
+            Viaje viaje = viajeOpt.get();
+            // viaje.cancelar();
+            ViajeRepository.save(viaje);
+        } 
+        else {
+            throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "Viaje no encontrado"
+            );
+        }
     }
 }
