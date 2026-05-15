@@ -3,7 +3,7 @@ package es.upm.fi.grupo_i.dto;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import es.upm.fi.grupo_i.Precio;
+import es.upm.fi.grupo_i.model.Precio;
 import es.upm.fi.grupo_i.enums.ESTADO_VIAJE;
 
 public class ViajeDto {
