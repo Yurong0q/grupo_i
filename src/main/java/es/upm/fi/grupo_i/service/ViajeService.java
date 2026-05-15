@@ -31,6 +31,14 @@ public class ViajeService {
         return viajeRepository.findById(id);
     }
 
+    public Viaje obtenerViajeObligatorio(Long id) {
+    return viajeRepository.findById(id)
+        .orElseThrow(() -> new ResponseStatusException(
+            HttpStatus.NOT_FOUND,
+            "No existe un viaje con id " + id
+        ));
+    }
+
     public Viaje crearViaje(Viaje viaje) {
         if (viaje.getId() != null) {
             throw new ResponseStatusException(
@@ -67,6 +75,31 @@ public class ViajeService {
         viajeRepository.save(viaje);
     }
 
+    public boolean hayPlazasDisponibles(Long idViaje, Long numeroPasajeros) {
+        Viaje viaje = obtenerViajeObligatorio(idViaje);
+        return viaje.getPlazasDisponibles() >= numeroPasajeros;
+    }
+
+    public void ocuparPlazas(Long idViaje, Long numeroPasajeros) {
+        Viaje viaje = obtenerViajeObligatorio(idViaje);
+
+        if (viaje.getPlazasDisponibles() < numeroPasajeros) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "No hay plazas suficientes en el viaje " + idViaje
+            );
+        }
+
+        viaje.ocuparPlazas(numeroPasajeros);
+        viajeRepository.save(viaje);
+    }
+
+    public void liberarPlazas(Long idViaje, Long numeroPasajeros) {
+        Viaje viaje = obtenerViajeObligatorio(idViaje);
+        viaje.liberarPlazas(numeroPasajeros);
+        viajeRepository.save(viaje);
+    }
+  
     public boolean comprobarViajeFinalizado(Long id) {
         Viaje viaje = viajeRepository.findById(id)
             .orElseThrow(() -> new ResponseStatusException(
