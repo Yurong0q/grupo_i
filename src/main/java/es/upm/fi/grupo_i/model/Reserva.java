@@ -1,9 +1,12 @@
 package es.upm.fi.grupo_i.model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import es.upm.fi.grupo_i.enums.ESTADO_RESERVA;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -15,23 +18,35 @@ public class Reserva {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long viaje_id;
-    private Long pasajero_id;
-    private int numero_pasajeros;
-    private LocalDate fechaDeCreacion;
+    
+    @Column(name = "viaje_id")
+    private Long viajeId;
+
+    @Column(name = "pasajero_id")
+    private Long pasajeroId;
+
+    @Column(name = "numero_pasajeros")
+    private Long numeroPasajeros;
+
+    @Column(name = "fecha_creacion")
+    private LocalDateTime fechaCreacion;
+
+    @Enumerated(EnumType.STRING)
     private ESTADO_RESERVA estado;
+
+    @Column(name = "id_pago")
     private Long idPago;
 
-    private Reserva() {
+    protected Reserva() {
         // Constructor vacío para JPA
     }
 
-    private Reserva(Long viaje_id, Long pasajero_id, int numero_pasajeros, LocalDate fechaDeCreacion) {
-        this.viaje_id = viaje_id;
-        this.pasajero_id = pasajero_id;
-        this.numero_pasajeros = numero_pasajeros;
-        this.fechaDeCreacion = fechaDeCreacion;
-        this.estado = ESTADO_RESERVA.PROVISIONAL; // Por defecto, la reserva se crea como provisional
+    public Reserva(Long viajeId, Long pasajeroId, Long numeroPasajeros) {
+        this.viajeId = viajeId;
+        this.pasajeroId = pasajeroId;
+        this.numeroPasajeros = numeroPasajeros;
+        this.fechaCreacion = LocalDateTime.now();
+        this.estado = ESTADO_RESERVA.PROVISIONAL; // Por defecto lo marco como provisional
     }
 
 
@@ -39,20 +54,20 @@ public class Reserva {
         return id;
     }
 
-    public Long getViaje_id() {
-        return viaje_id;
+    public Long getViajeId() {
+        return viajeId;
     }
 
-    public Long getPasajero_id() {
-        return pasajero_id;
+    public Long getPasajeroId() {
+        return pasajeroId;
     }
 
-    public int getNumero_pasajeros() {
-        return numero_pasajeros;
+    public Long getNumeroPasajeros() {
+        return numeroPasajeros;
     }
 
-    public LocalDate getFechaDeCreacion() {
-        return fechaDeCreacion;
+    public LocalDateTime getFechaCreacion() {
+        return fechaCreacion;
     }
 
     public ESTADO_RESERVA getEstado() {
@@ -63,11 +78,24 @@ public class Reserva {
         return idPago;
     }
 
-    public void setEstado(ESTADO_RESERVA estado) {
-        this.estado = estado;
+    public void marcarProvisional() {
+        this.estado = ESTADO_RESERVA.PROVISIONAL;
     }
 
-    public void setIdPago(Long idPago) {
+    public void confirmar() {
+        this.estado = ESTADO_RESERVA.CONFIRMADA;
+    }
+
+    public void cancelar() {
+        this.estado = ESTADO_RESERVA.CANCELADA;
+    }
+
+    public boolean esCancelable() {
+        return this.estado == ESTADO_RESERVA.PROVISIONAL
+            || this.estado == ESTADO_RESERVA.CONFIRMADA;
+    }
+
+    public void asociarPago(Long idPago) {
         this.idPago = idPago;
     }
 }
