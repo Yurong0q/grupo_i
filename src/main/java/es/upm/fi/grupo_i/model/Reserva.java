@@ -15,21 +15,21 @@ public class Reserva {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long viaje_id;
-    private Long pasajero_id;
-    private int numero_pasajeros;
+    private Long viajeId;
+    private Long pasajeroId;
+    private int numeroPasajeros;
     private LocalDate fechaDeCreacion;
     private ESTADO_RESERVA estado;
     private Long idPago;
 
-    private Reserva() {
+    protected Reserva() {
         // Constructor vacío para JPA
     }
 
-    private Reserva(Long viaje_id, Long pasajero_id, int numero_pasajeros, LocalDate fechaDeCreacion) {
-        this.viaje_id = viaje_id;
-        this.pasajero_id = pasajero_id;
-        this.numero_pasajeros = numero_pasajeros;
+    public Reserva(Long viajeId, Long pasajeroId, int numeroPasajeros, LocalDate fechaDeCreacion) {
+        this.viajeId = viajeId;
+        this.pasajeroId = pasajeroId;
+        this.numeroPasajeros = numeroPasajeros;
         this.fechaDeCreacion = fechaDeCreacion;
         this.estado = ESTADO_RESERVA.PROVISIONAL; // Por defecto, la reserva se crea como provisional
     }
@@ -39,16 +39,16 @@ public class Reserva {
         return id;
     }
 
-    public Long getViaje_id() {
-        return viaje_id;
+    public Long getViajeId() {
+        return viajeId;
     }
 
-    public Long getPasajero_id() {
-        return pasajero_id;
+    public Long getPasajeroId() {
+        return pasajeroId;
     }
 
-    public int getNumero_pasajeros() {
-        return numero_pasajeros;
+    public int getNumeroPasajeros() {
+        return numeroPasajeros;
     }
 
     public LocalDate getFechaDeCreacion() {

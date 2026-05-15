@@ -13,8 +13,8 @@ public class Resenya {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long viaje_id;
-    private Long autor_id;
+    private Long viajeId;
+    private Long autorId;
     private int puntuacion;
     private String comentario;
 
@@ -22,9 +22,9 @@ public class Resenya {
         // Constructor vacío para JPA
     }
 
-    public Resenya(Long viaje_id, Long autor_id, int puntuacion, String comentario) {
-        this.viaje_id = viaje_id;
-        this.autor_id = autor_id;
+    public Resenya(Long viajeId, Long autorId, int puntuacion, String comentario) {
+        this.viajeId = viajeId;
+        this.autorId = autorId;
         this.puntuacion = puntuacion;
         this.comentario = comentario;
     }
@@ -33,12 +33,12 @@ public class Resenya {
         return id;
     }
 
-    public Long getViaje_id() {
-        return viaje_id;
+    public Long getViajeId() {
+        return viajeId;
     }
 
-    public Long getAutor_id() {
-        return autor_id;
+    public Long getAutorId() {
+        return autorId;
     }
 
     public int getPuntuacion() {
