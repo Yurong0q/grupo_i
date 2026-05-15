@@ -1,5 +1,5 @@
 INSERT INTO viajes (conductor_id, origen, destino, plazas_disponibles, fecha_salida, hora_salida, duracion_estimada, estado, cantidad, moneda) 
-VALUES (null, 'Madrid', 'Barcelona', 3, null, null, 360, 'ACTIVO', 45.50, 'EURO');
+VALUES (null, 'Madrid', 'Barcelona', 3, '2026-05-15', '8:00:00.0', 360, 'ACTIVO', 45.50, 'EURO');
 
 INSERT INTO viajes (conductor_id, origen, destino, plazas_disponibles, fecha_salida, hora_salida, duracion_estimada, estado, cantidad, moneda)
 VALUES (6, 'Madrid', 'Valencia', 2, null, null, 240, 'FINALIZADO', 30.00, 'EURO');
