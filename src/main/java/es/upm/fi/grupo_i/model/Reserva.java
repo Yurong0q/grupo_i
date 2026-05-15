@@ -26,7 +26,7 @@ public class Reserva {
     private Long pasajeroId;
 
     @Column(name = "numero_pasajeros")
-    private Long numeroPasajeros;
+    private int numeroPasajeros;
 
     @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion;
@@ -41,7 +41,7 @@ public class Reserva {
         // Constructor vacío para JPA
     }
 
-    public Reserva(Long viajeId, Long pasajeroId, Long numeroPasajeros) {
+    public Reserva(Long viajeId, Long pasajeroId, int numeroPasajeros) {
         this.viajeId = viajeId;
         this.pasajeroId = pasajeroId;
         this.numeroPasajeros = numeroPasajeros;
@@ -62,7 +62,7 @@ public class Reserva {
         return pasajeroId;
     }
 
-    public Long getNumeroPasajeros() {
+    public int getNumeroPasajeros() {
         return numeroPasajeros;
     }
 
