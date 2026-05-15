@@ -47,6 +47,21 @@ public class ViajeService {
             );
         }
 
+        if (viaje.getConductorId() == null) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Conductor invalido"
+            );
+        }
+
+        if (viaje.getEstado() != ESTADO_VIAJE.ACTIVO) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "El estado del viaje debe ser ACTIVO al crearlo"
+            );
+
+        }
+
         if (viaje.getOrigen() == null || viaje.getOrigen().isBlank()) {
             throw new ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
@@ -74,6 +89,21 @@ public class ViajeService {
                 "La duración estimada debe ser un valor positivo"
             );
         }        
+
+        if (viaje.getPlazasDisponibles() <= 0) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Las plazas disponibles deben ser un valor positivo"
+            );
+        }
+
+        if (viaje.getPrecio() == null || viaje.getPrecio().getCantidad() < 0) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "El precio es obligatorio y no puede ser negativo"
+            );
+
+        }
 
         return viajeRepository.save(viaje);
     }
