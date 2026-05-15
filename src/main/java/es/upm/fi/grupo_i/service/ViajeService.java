@@ -61,6 +61,20 @@ public class ViajeService {
             );
         }
 
+        if (viaje.getDestino().equals(viaje.getOrigen())) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "El origen y el destino no pueden ser iguales"
+            );
+        }
+
+        if (viaje.getDuracionEstimada() <= 0) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "La duración estimada debe ser un valor positivo"
+            );
+        }        
+
         return viajeRepository.save(viaje);
     }
 
