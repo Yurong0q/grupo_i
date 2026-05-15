@@ -4,7 +4,6 @@ import es.upm.fi.grupo_i.dto.ViajeDto;
 import es.upm.fi.grupo_i.model.Viaje;
 import es.upm.fi.grupo_i.service.ViajeService;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
