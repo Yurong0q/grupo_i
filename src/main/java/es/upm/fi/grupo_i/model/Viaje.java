@@ -91,7 +91,7 @@ public class Viaje {
         return estado;
     }
 
-    
+
     public void setPlazas_disponibles(int plazas_disponibles) {
         this.plazas_disponibles = plazas_disponibles;
     }
