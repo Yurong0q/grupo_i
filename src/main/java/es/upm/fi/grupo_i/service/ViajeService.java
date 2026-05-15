@@ -29,10 +29,6 @@ public class ViajeService {
         return viajeRepository.findById(id);
     }
 
-    public Optional<Viaje> obtenerViaje(long id) {
-        return viajeRepository.findById(id);
-    }
-
     public Viaje crearViaje(Viaje viaje) {
         if (viaje.getId() != null) {
             throw new ResponseStatusException(
