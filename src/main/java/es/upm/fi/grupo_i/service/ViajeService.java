@@ -75,12 +75,12 @@ public class ViajeService {
         viajeRepository.save(viaje);
     }
 
-    public boolean hayPlazasDisponibles(Long idViaje, Long numeroPasajeros) {
+    public boolean hayPlazasDisponibles(Long idViaje, int numeroPasajeros) {
         Viaje viaje = obtenerViajeObligatorio(idViaje);
         return viaje.getPlazasDisponibles() >= numeroPasajeros;
     }
 
-    public void ocuparPlazas(Long idViaje, Long numeroPasajeros) {
+    public void ocuparPlazas(Long idViaje, int numeroPasajeros) {
         Viaje viaje = obtenerViajeObligatorio(idViaje);
 
         if (viaje.getPlazasDisponibles() < numeroPasajeros) {
@@ -94,7 +94,7 @@ public class ViajeService {
         viajeRepository.save(viaje);
     }
 
-    public void liberarPlazas(Long idViaje, Long numeroPasajeros) {
+    public void liberarPlazas(Long idViaje, int numeroPasajeros) {
         Viaje viaje = obtenerViajeObligatorio(idViaje);
         viaje.liberarPlazas(numeroPasajeros);
         viajeRepository.save(viaje);

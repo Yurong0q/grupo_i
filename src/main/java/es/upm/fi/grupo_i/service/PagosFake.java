@@ -7,7 +7,7 @@ public class PagosFake {
 
     private Long secuenciaPagos = 1L;
 
-    public Long procesarPago(Long viajeId, Long pasajeroId, Long numeroPasajeros) {
+    public Long procesarPago(Long viajeId, Long pasajeroId, int numeroPasajeros) {
         return secuenciaPagos++;
     }
 
