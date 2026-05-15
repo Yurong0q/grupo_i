@@ -166,11 +166,11 @@ public class Viaje {
         this.estado = ESTADO_VIAJE.CANCELADO;
     }
 
-    public void ocuparPlazas(int numero) {
+    public void ocuparPlazas(Long numero) {
         this.plazasDisponibles -= numero;
     }
 
-    public void liberarPlazas(int numero) {
+    public void liberarPlazas(Long numero) {
         this.plazasDisponibles += numero;
     }
 }
