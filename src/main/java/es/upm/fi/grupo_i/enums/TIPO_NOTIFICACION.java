@@ -1,0 +1,9 @@
+package es.upm.fi.grupo_i.enums;
+
+public enum TIPO_NOTIFICACION {
+    VIAJE_CONFIRMADO,
+    VIAJE_CANCELADO,
+    RESERVA_CONFIRMADA,
+    RESERVA_CANCELADA,
+    PAGO_REALIZADO
+}

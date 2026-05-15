@@ -2,6 +2,8 @@ package es.upm.fi.grupo_i.model;
 
 
 import java.time.LocalDateTime;
+
+import es.upm.fi.grupo_i.enums.TIPO_NOTIFICACION;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,7 +17,7 @@ public class Notificacion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long usuario_id;
-    private String tipo; // Por ejemplo: "RESERVA_CONFIRMADA", "VIAJE_CANCELADO", etc.
+    private TIPO_NOTIFICACION tipo; // Por ejemplo: "RESERVA_CONFIRMADA", "VIAJE_CANCELADO", etc.
     private String mensaje;
     private LocalDateTime fechaCreacion;
 
@@ -23,7 +25,7 @@ public class Notificacion {
         // Constructor vacío para JPA
     }
 
-    private Notificacion(Long usuario_id, String tipo, String mensaje, LocalDateTime fechaCreacion) {
+    private Notificacion(Long usuario_id, TIPO_NOTIFICACION tipo, String mensaje, LocalDateTime fechaCreacion) {
         this.usuario_id = usuario_id;
         this.tipo = tipo;
         this.mensaje = mensaje;
@@ -38,7 +40,7 @@ public class Notificacion {
         return usuario_id;
     }
 
-    public String getTipo() {
+    public TIPO_NOTIFICACION getTipo() {
         return tipo;
     }
 
