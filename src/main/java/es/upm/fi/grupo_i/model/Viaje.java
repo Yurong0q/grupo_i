@@ -1,103 +1,176 @@
 package es.upm.fi.grupo_i.model;
 
-import es.upm.fi.grupo_i.Precio;
 import es.upm.fi.grupo_i.enums.ESTADO_VIAJE;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
-
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "Viajes")
-
+@Table(name = "viajes")
 public class Viaje {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long conductor_id;
+
+    @Column(name = "conductor_id")
+    private Long conductorId;
+
     private String origen;
     private String destino;
-    private String[] paradas;
-    private int plazas_disponibles;
+
+    @ElementCollection
+    private List<String> paradas = new ArrayList<>();
+
+    @Column(name = "plazas_disponibles")
+    private int plazasDisponibles;
+
+    @Embedded
     private Precio precio;
-    private LocalDate fecha_salida;
-    private LocalTime hora_salida;
-    private int duracion_estimada;
+
+    @Column(name = "fecha_salida")
+    private LocalDate fechaSalida;
+
+    @Column(name = "hora_salida")
+    private LocalTime horaSalida;
+
+    @Column(name = "duracion_estimada")
+    private int duracionEstimada;
+
+    @Enumerated(EnumType.STRING)
     private ESTADO_VIAJE estado;
-    
-    private Viaje() {
-        // Constructor vacío para JPA
+
+    protected Viaje() {
     }
 
-    private Viaje(Long conductor_id, String origen, String destino, String[] paradas, int plazas_disponibles, Precio precio, LocalDate fecha_salida, LocalTime hora_salida, int duracion_estimada) {
-        this.conductor_id = conductor_id;
+    public Viaje(
+        Long conductorId,
+        String origen,
+        String destino,
+        List<String> paradas,
+        int plazasDisponibles,
+        Precio precio,
+        LocalDate fechaSalida,
+        LocalTime horaSalida,
+        int duracionEstimada
+    ) {
+        this.conductorId = conductorId;
         this.origen = origen;
         this.destino = destino;
-        this.paradas = paradas;
-        this.plazas_disponibles = plazas_disponibles;
+        this.paradas = paradas != null ? paradas : new ArrayList<>();
+        this.plazasDisponibles = plazasDisponibles;
         this.precio = precio;
-        this.fecha_salida = fecha_salida;
-        this.hora_salida = hora_salida;
-        this.duracion_estimada = duracion_estimada;
-        this.estado = ESTADO_VIAJE.ACTIVO; // Por defecto, el viaje se crea como activo
+        this.fechaSalida = fechaSalida;
+        this.horaSalida = horaSalida;
+        this.duracionEstimada = duracionEstimada;
+        this.estado = ESTADO_VIAJE.ACTIVO;
     }
-
 
     public Long getId() {
         return id;
     }
 
-    public Long getConductor_id() {
-        return conductor_id;
+    public Long getConductorId() {
+        return conductorId;
+    }
+
+    public void setConductorId(Long conductorId) {
+        this.conductorId = conductorId;
     }
 
     public String getOrigen() {
         return origen;
     }
 
+    public void setOrigen(String origen) {
+        this.origen = origen;
+    }
+
     public String getDestino() {
         return destino;
     }
 
-    public String[] getParadas() {
+    public void setDestino(String destino) {
+        this.destino = destino;
+    }
+
+    public List<String> getParadas() {
         return paradas;
     }
 
-    public int getPlazas_disponibles() {
-        return plazas_disponibles;
+    public void setParadas(List<String> paradas) {
+        this.paradas = paradas != null ? paradas : new ArrayList<>();
+    }
+
+    public int getPlazasDisponibles() {
+        return plazasDisponibles;
+    }
+
+    public void setPlazasDisponibles(int plazasDisponibles) {
+        this.plazasDisponibles = plazasDisponibles;
     }
 
     public Precio getPrecio() {
         return precio;
     }
 
-    public LocalDate getFecha_salida() {
-        return fecha_salida;
+    public void setPrecio(Precio precio) {
+        this.precio = precio;
     }
 
-    public LocalTime getHora_salida() {
-        return hora_salida;
+    public LocalDate getFechaSalida() {
+        return fechaSalida;
     }
 
-    public int getDuracion_estimada() {
-        return duracion_estimada;
+    public void setFechaSalida(LocalDate fechaSalida) {
+        this.fechaSalida = fechaSalida;
+    }
+
+    public LocalTime getHoraSalida() {
+        return horaSalida;
+    }
+
+    public void setHoraSalida(LocalTime horaSalida) {
+        this.horaSalida = horaSalida;
+    }
+
+    public int getDuracionEstimada() {
+        return duracionEstimada;
+    }
+
+    public void setDuracionEstimada(int duracionEstimada) {
+        this.duracionEstimada = duracionEstimada;
     }
 
     public ESTADO_VIAJE getEstado() {
         return estado;
     }
 
-
-    public void setPlazas_disponibles(int plazas_disponibles) {
-        this.plazas_disponibles = plazas_disponibles;
-    }
-
     public void setEstado(ESTADO_VIAJE estado) {
         this.estado = estado;
     }
 
+    public void cancelar() {
+        this.estado = ESTADO_VIAJE.CANCELADO;
+    }
+
+    public void ocuparPlazas(int numero) {
+        this.plazasDisponibles -= numero;
+    }
+
+    public void liberarPlazas(int numero) {
+        this.plazasDisponibles += numero;
+    }
 }

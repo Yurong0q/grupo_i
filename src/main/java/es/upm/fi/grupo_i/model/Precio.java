@@ -1,10 +1,16 @@
-package es.upm.fi.grupo_i;
+package es.upm.fi.grupo_i.model;
 
+import jakarta.persistence.Embeddable;
+
+@Embeddable
 public class Precio {
 
     private float cantidad;
     private String moneda;
 
+    protected Precio(){
+    }
+    
     public Precio(float cantidad, String moneda) {
         this.cantidad = cantidad;
         this.moneda = moneda;

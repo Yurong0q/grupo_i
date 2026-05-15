@@ -1,11 +1,8 @@
 package es.upm.fi.grupo_i.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -16,35 +13,60 @@ import es.upm.fi.grupo_i.repository.ViajeRepository;
 @Service
 public class ViajeService {
 
-    private final ViajeRepository ViajeRepository;
+    private final ViajeRepository viajeRepository;
 
-    public ViajeService(ViajeRepository ViajeRepository) {
-        this.ViajeRepository = ViajeRepository;
+    public ViajeService(ViajeRepository viajeRepository) {
+        this.viajeRepository = viajeRepository;
     }
 
     // Todos los viajes
-    public List<Viaje> obtenerTodosViajes() {
-        return new ArrayList<>(ViajeRepository.findAll());
+    public List<Viaje> obtenerViajes() {
+        return viajeRepository.findAll();
     }
 
-    public Page<Viaje> obtenerTodosViajes(String nombre, Pageable pageable) {
-        if (nombre != null && !nombre.trim().isEmpty()) {
-            return ViajeRepository.findByNombreContainingIgnoreCase(nombre, pageable);
-        }
-        return ViajeRepository.findAll(pageable);
+    // Viaje por ID
+    public Optional<Viaje> obtenerViaje(Long id) {
+        return viajeRepository.findById(id);
     }
 
     public Optional<Viaje> obtenerViaje(long id) {
-        return ViajeRepository.findById(id);
+        return viajeRepository.findById(id);
     }
 
-    public void anadirViaje(Viaje viaje) throws Exception {
+    public Viaje crearViaje(Viaje viaje) {
         if (viaje.getId() != null) {
             throw new ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
                 "Un viaje nuevo no debe tener ID"
             );
         }
-        ViajeRepository.save(viaje);
+
+        if (viaje.getOrigen() == null || viaje.getOrigen().isBlank()) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "El origen es obligatorio"
+            );
+        }
+
+        if (viaje.getDestino() == null || viaje.getDestino().isBlank()) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "El destino es obligatorio"
+            );
+        }
+
+        return viajeRepository.save(viaje);
     }
+
+    public void cancelarViaje(Long id) {
+        Viaje viaje = viajeRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException( //Si no lo encuentro 
+                HttpStatus.NOT_FOUND,
+                "No existe un viaje con id " + id
+            ));
+
+        viaje.cancelar();
+        viajeRepository.save(viaje);
+    }
+
 }
