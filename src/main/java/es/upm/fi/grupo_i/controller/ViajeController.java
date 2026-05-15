@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import es.upm.fi.grupo_i.dto.ViajeDto;
 import es.upm.fi.grupo_i.model.Viaje;
 import es.upm.fi.grupo_i.service.ViajeService;
 
