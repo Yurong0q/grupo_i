@@ -1,5 +1,6 @@
 package es.upm.fi.grupo_i.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,7 +22,7 @@ public class ViajeService {
 
     // Todos los viajes
     public List<Viaje> obtenerViajes() {
-        return viajeRepository.findAll();
+        return new ArrayList<>(viajeRepository.findAll());
     }
 
     // Viaje por ID
