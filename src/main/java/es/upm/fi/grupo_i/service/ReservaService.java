@@ -114,6 +114,6 @@ public class ReservaService {
                 "No existe una reserva con id de usuario " + autorId + " y id de viaje " + viajeId 
             );
         }
-        return reservaLista.get(0).getEstado() == ESTADO_RESERVA.CONFIRMADA;
+        return reservaLista.get(0).getEstado() == ESTADO_RESERVA.FINALIZADA;
     }
 }
