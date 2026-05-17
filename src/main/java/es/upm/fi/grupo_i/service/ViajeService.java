@@ -157,5 +157,4 @@ public class ViajeService {
 
         return viaje.getEstado() == ESTADO_VIAJE.FINALIZADO;
     }
-
 }

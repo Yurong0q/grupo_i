@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import es.upm.fi.grupo_i.model.Resenya;
+import es.upm.fi.grupo_i.model.Reserva;
 import es.upm.fi.grupo_i.model.Usuario;
 import es.upm.fi.grupo_i.repository.UsuarioRepository;
 
@@ -14,9 +16,13 @@ import es.upm.fi.grupo_i.repository.UsuarioRepository;
 public class UsuarioService { //TODO implementar Jwt
 
     private final UsuarioRepository usuarioRepository;
+    private final ReservaService reservaService;
+    private final ResenyaService resenyaService;
 
-    public UsuarioService(UsuarioRepository usuarioRepository) {
+    public UsuarioService(UsuarioRepository usuarioRepository, ReservaService reservaService, ResenyaService resenyaService) {
         this.usuarioRepository = usuarioRepository;
+        this.reservaService = reservaService;
+        this.resenyaService = resenyaService;
     }
 
     public List<Usuario> getUsuarios() {
@@ -53,5 +59,13 @@ public class UsuarioService { //TODO implementar Jwt
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciales incorrectas");
         }
         return usuario;
+    }
+
+    public List<Reserva> obtenerReservasUsuario(Long usuarioId) {
+        return reservaService.obtenerReservasUsuario(usuarioId);
+    }
+
+    public List<Resenya> obtenerResenyasUsuario(Long usuarioId) {
+        return resenyaService.obtenerResenyasUsuario(usuarioId);
     }
 }

@@ -1,5 +1,6 @@
 package es.upm.fi.grupo_i.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -11,7 +12,7 @@ import es.upm.fi.grupo_i.model.Reserva;
 import es.upm.fi.grupo_i.repository.ReservasRepository;
 
 @Service
-public class ReservaService {
+public class ReservaService { //TODO comprobar que pasajero != conductor
     private final ReservasRepository reservasRepository;
     private final ViajeService viajeService;
     private final PagosFake pagosFake;
@@ -115,5 +116,9 @@ public class ReservaService {
             );
         }
         return reservaLista.get(0).getEstado() == ESTADO_RESERVA.FINALIZADA;
+    }
+
+    public List<Reserva> obtenerReservasUsuario(Long usuarioId) {
+        return new ArrayList<>(reservasRepository.findByPasajeroId(usuarioId));
     }
 }

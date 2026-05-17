@@ -1,5 +1,8 @@
 package es.upm.fi.grupo_i.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -44,5 +47,9 @@ public class ResenyaService {
         resenyaRepository.save(resenya);
 
         return resenya;
+    }
+
+    public List<Resenya> obtenerResenyasUsuario(Long autorId) {
+        return new ArrayList<>(resenyaRepository.findByAutorId(autorId));
     }
 }
