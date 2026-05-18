@@ -39,7 +39,7 @@ public class Usuario {
         return nombre; 
     }
 
-    protected void cambiarPassword(String password) { //TODO revisar
+    public void cambiarPassword(String password) {
         this.password = password; 
     }
 }

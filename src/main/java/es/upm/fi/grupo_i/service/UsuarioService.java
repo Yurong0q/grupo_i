@@ -34,7 +34,7 @@ public class UsuarioService { //TODO implementar Jwt
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El nombre es obligatorio");
         }
 
-        if (usuario.getEmail() == null || usuario.getEmail().isBlank() || !usuario.getEmail().contains("@")) {
+        if (usuario.getEmail() == null || !usuario.getEmail().contains("@")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El email no es válido");
         }
 
@@ -49,7 +49,7 @@ public class UsuarioService { //TODO implementar Jwt
         return usuarioRepository.save(usuario);
     }
 
-    public Usuario logIn(String email, String password) {
+    public Usuario logIn(String email, String password) { //TODO estar logeado para cambiar contraseña, reservar, reseñar, y crear un viaje
         if (email == null || password == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email y contraseña son obligatorios");
         }
@@ -59,6 +59,16 @@ public class UsuarioService { //TODO implementar Jwt
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciales incorrectas");
         }
         return usuario;
+    }
+
+    public Usuario cambiarPassword(Long usuarioId, String nuevaPassword) {
+        if (nuevaPassword == null || nuevaPassword.isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La nueva contraseña es obligatoria");
+        }
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
+        usuario.cambiarPassword(nuevaPassword);
+        return usuarioRepository.save(usuario);
     }
 
     public List<Reserva> obtenerReservasUsuario(Long usuarioId) {

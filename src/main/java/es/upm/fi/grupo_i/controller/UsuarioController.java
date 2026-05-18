@@ -25,6 +25,11 @@ public class UsuarioController {
         return usuarioService.getUsuarios();
     }
 
+    @PutMapping("/{usuario-id}")
+    public Usuario cambiarPassword(@PathVariable("usuario-id") Long usuarioId, @RequestBody Usuario usuario) {
+        return usuarioService.cambiarPassword(usuarioId, usuario.getPassword());
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Usuario registrar(@RequestBody Usuario usuario) {
