@@ -1,8 +1,9 @@
 package es.upm.fi.grupo_i.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -125,7 +126,8 @@ public class ReservaService {
         return reservaLista.get(0).getEstado() == ESTADO_RESERVA.FINALIZADA;
     }
 
-    public List<Reserva> obtenerReservasUsuario(Long usuarioId) {
-        return new ArrayList<>(reservasRepository.findByPasajeroId(usuarioId));
+    public Page<Reserva> obtenerReservasUsuario(Long usuarioId, Pageable pageable) {
+        Page<Reserva> reservas = reservasRepository.findByPasajeroId(usuarioId, pageable);
+        return reservas;
     }
 }

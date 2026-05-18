@@ -1,9 +1,9 @@
 package es.upm.fi.grupo_i.service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -24,8 +24,12 @@ public class ViajeService {
     }
 
     // Todos los viajes
-    public List<Viaje> obtenerViajes() {
-        return new ArrayList<>(viajeRepository.findAll());
+    public Page<Viaje> obtenerViajes(String destino, Pageable pageable) {
+        Page<Viaje> viajes = (destino == null || destino.isBlank())
+            ? viajeRepository.findAll(pageable)
+            : viajeRepository.findByDestino(destino, pageable);
+
+        return viajes;
     }
 
     // Viaje por ID

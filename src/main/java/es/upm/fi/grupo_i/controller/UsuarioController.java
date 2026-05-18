@@ -5,8 +5,6 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import es.upm.fi.grupo_i.model.Resenya;
-import es.upm.fi.grupo_i.model.Reserva;
 import es.upm.fi.grupo_i.model.Usuario;
 import es.upm.fi.grupo_i.service.UsuarioService;
 
@@ -42,13 +40,13 @@ public class UsuarioController {
         return usuarioService.logIn(usuario.getEmail(), usuario.getPassword());
     }
 
-    @GetMapping("/{usuario-id}/reservas")
-    public List<Reserva> obtenerReservasUsuario(@PathVariable("usuario-id") Long usuarioId) {
-        return usuarioService.obtenerReservasUsuario(usuarioId);
-    }
+    // @GetMapping("/{usuario-id}/reservas")
+    // public List<Reserva> obtenerReservasUsuario(@PathVariable("usuario-id") Long usuarioId) {
+    //     return usuarioService.obtenerReservasUsuario(usuarioId);
+    // }
 
-    @GetMapping("/{usuario-id}/resenyas")
-    public List<Resenya> obtenerResenyasUsuario(@PathVariable("usuario-id") Long usuarioId) {
-        return usuarioService.obtenerResenyasUsuario(usuarioId);
-    }
+    // @GetMapping("/{usuario-id}/resenyas")
+    // public List<Resenya> obtenerResenyasUsuario(@PathVariable("usuario-id") Long usuarioId) {
+    //     return usuarioService.obtenerResenyasUsuario(usuarioId);
+    // }
 }

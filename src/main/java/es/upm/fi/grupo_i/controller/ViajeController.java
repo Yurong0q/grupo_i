@@ -1,7 +1,9 @@
 package es.upm.fi.grupo_i.controller;
 
-import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -20,8 +22,13 @@ public class ViajeController {
     }
 
     @GetMapping("/viajes")
-    public List<Viaje> obtenerViajes() {
-        return viajeService.obtenerViajes();
+    public Page<Viaje> obtenerViajes(
+        @RequestParam(required = false) String destino,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        return viajeService.obtenerViajes(destino, pageable);
     }
 
     @GetMapping("/viajes/{id}")
@@ -44,5 +51,4 @@ public class ViajeController {
     public void cancelarViaje(@PathVariable Long id) {
         viajeService.cancelarViaje(id);
     }
-
 }
