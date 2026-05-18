@@ -12,7 +12,7 @@ import es.upm.fi.grupo_i.model.Reserva;
 import es.upm.fi.grupo_i.repository.ReservasRepository;
 
 @Service
-public class ReservaService { //TODO comprobar que pasajero != conductor
+public class ReservaService { 
     private final ReservasRepository reservasRepository;
     private final ViajeService viajeService;
     private final PagosFake pagosFake;
@@ -57,6 +57,13 @@ public class ReservaService { //TODO comprobar que pasajero != conductor
             throw new ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
                 "El pasajeroId es obligatorio"
+            );
+        }
+
+        if (peticion.getPasajeroId().equals(viajeService.obtenerViajeObligatorio(peticion.getViajeId()).getConductorId())) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "El pasajero no puede ser el conductor del viaje"
             );
         }
 
