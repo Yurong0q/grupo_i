@@ -10,5 +10,7 @@ import es.upm.fi.grupo_i.model.Reserva;
 
 public interface ReservasRepository extends JpaRepository<Reserva, Long> {
     List<Reserva> findByViajeIdAndPasajeroId(Long viajeId, Long usuarioId);
+    List<Reserva> findByViajeId(Long viajeId);    
     Page<Reserva> findByPasajeroId(Long pasajeroId, Pageable pageable);
+
 }

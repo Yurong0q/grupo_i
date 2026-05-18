@@ -39,79 +39,69 @@ public class ReservaService {
             ));
     }
 
-    public Reserva procesarReserva(Reserva peticion) {
-        if (peticion.getId() != null) {
-            throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST,
-                "Una reserva nueva no debe tener ID"
-            );
-        }
-
-        if (peticion.getViajeId() == null) {
+    public Reserva procesarReserva(Long viajeId, Long pasajeroId, int numPasajeros, String datosPago) {
+        
+        if (viajeId == null) {
             throw new ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
                 "El viajeId es obligatorio"
             );
         }
 
-        if (peticion.getPasajeroId() == null) {
+        if (pasajeroId == null) {
             throw new ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
                 "El pasajeroId es obligatorio"
             );
         }
 
-        if (peticion.getPasajeroId().equals(viajeService.obtenerViajeObligatorio(peticion.getViajeId()).getConductorId())) {
-            throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST,
-                "El pasajero no puede ser el conductor del viaje"
-            );
-        }
-
-        if (peticion.getNumeroPasajeros() <= 0) {
+        if (numPasajeros <= 0) {
             throw new ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
                 "El numero de pasajeros debe ser mayor que 0"
             );
         }
-
-        if (!viajeService.hayPlazasDisponibles(
-                peticion.getViajeId(),
-                peticion.getNumeroPasajeros())) {
+        int plazasDisponibles = viajeService.comprobarDisponibilidad(viajeId);
+        if (plazasDisponibles < numPasajeros){
             throw new ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
                 "No hay plazas disponibles para ese viaje"
             );
         }
 
-        Reserva reserva = new Reserva(peticion.getViajeId(),peticion.getPasajeroId(),peticion.getNumeroPasajeros());
-
-        reserva.marcarProvisional();
+        if (viajeService.comprobarConductorDistintoDePasajero(viajeId, pasajeroId)){
+             throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "El conductor no puede ser el pasajero"
+            );
+        }
+        
+        Reserva reserva = new Reserva(viajeId, pasajeroId, numPasajeros);
+        //Se crea como provisional
         reservasRepository.save(reserva);
-        Long idPago = pagosFake.procesarPago(reserva.getViajeId(), reserva.getPasajeroId(), reserva.getNumeroPasajeros());
+        Long idPago = pagosFake.procesarPago(viajeId, pasajeroId, numPasajeros, datosPago);
         reserva.asociarPago(idPago);
         reserva.confirmar();
         reservasRepository.save(reserva);
-        viajeService.ocuparPlazas(reserva.getViajeId(),reserva.getNumeroPasajeros());
+        viajeService.ocuparPlazas(viajeId , numPasajeros);
         notificacionesFake.notificarReservaConfirmada(reserva.getId());
         return reserva;
     }
 
-    public void cancelarReserva(Long id) {
-        Reserva reserva = obtenerReserva(id);
-
+    public Reserva cancelarReserva(Long reservaId) {
+        Reserva reserva = obtenerReserva(reservaId);
         if (!reserva.esCancelable()) {
             throw new ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
                 "La reserva no se puede cancelar"
             );
         }
-
         reserva.cancelar();
         reservasRepository.save(reserva);
-        pagosFake.procesarDevolucion(id);
+        pagosFake.procesarDevolucion(reservaId);
         viajeService.liberarPlazas(reserva.getViajeId(),reserva.getNumeroPasajeros());
-        notificacionesFake.notificarCancelacionReserva(id);
+        notificacionesFake.notificarCancelacionReserva(reservaId);
+        return reserva;
     }
 
     public boolean comprobarReservaValida(Long viajeId, Long autorId) {
@@ -129,5 +119,9 @@ public class ReservaService {
     public Page<Reserva> obtenerReservasUsuario(Long usuarioId, Pageable pageable) {
         Page<Reserva> reservas = reservasRepository.findByPasajeroId(usuarioId, pageable);
         return reservas;
+    }
+
+    public List<Reserva> obtenerReservasPorViaje(Long viajeId){
+        return reservasRepository.findByViajeId(viajeId);
     }
 }

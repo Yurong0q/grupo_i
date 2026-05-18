@@ -25,6 +25,20 @@ public class ResenyaService {
 
     public Resenya registrarResenya(Long viajeId, Long autorId, int puntuacion, String comentario) {
 
+        if (viajeId == null) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "El viajeId es obligatorio"
+            );
+        }
+
+        if (autorId == null) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "El autorId es obligatorio"
+            );
+        }
+
         if (!viajeService.comprobarViajeFinalizado(viajeId)) {
             throw new ResponseStatusException(
                 HttpStatus.BAD_REQUEST,

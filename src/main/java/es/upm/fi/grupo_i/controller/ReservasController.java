@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -45,13 +44,13 @@ public class ReservasController {
 
     @PostMapping("/reservas")
     @ResponseStatus(HttpStatus.CREATED)
-    public Reserva crearReserva(@RequestBody Reserva reserva) {
-        return reservaService.procesarReserva(reserva);
+    public Reserva procesarReserva(@PathVariable Long viajeId, Long pasajeroId, int numPasajeros, String datosPago) {
+        return reservaService.procesarReserva(viajeId, pasajeroId, numPasajeros, datosPago);
     }
 
     @DeleteMapping("/reservas/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void cancelarReserva(@PathVariable Long id) {
-        reservaService.cancelarReserva(id);
+    public Reserva cancelarReserva(@PathVariable Long id) {
+        return reservaService.cancelarReserva(id);
     }
 }

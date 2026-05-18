@@ -27,7 +27,6 @@ public class ResenyaController {
         return resenyaService.registrarResenya(viajeId, autorId, puntuacion, comentario);
     }
 
-
     //Paginacion de resenyas de un usuario
     @GetMapping("/resenyas")
     public Page<Resenya> obtenerResenyasUsuario(

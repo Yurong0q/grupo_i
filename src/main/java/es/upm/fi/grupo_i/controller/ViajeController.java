@@ -6,7 +6,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 // import es.upm.fi.grupo_i.dto.ViajeDto;
 import es.upm.fi.grupo_i.model.Viaje;
@@ -33,11 +32,7 @@ public class ViajeController {
 
     @GetMapping("/viajes/{id}")
     public Viaje obtenerViaje(@PathVariable Long id) {
-        return viajeService.obtenerViaje(id)
-            .orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND,
-                "No existe un viaje con id " + id
-            ));
+        return viajeService.obtenerViaje(id);
     }
 
     @PostMapping("/viajes")
@@ -46,9 +41,11 @@ public class ViajeController {
         return viajeService.crearViaje(viaje);
     }
 
+    
     @DeleteMapping("/viajes/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void cancelarViaje(@PathVariable Long id) {
-        viajeService.cancelarViaje(id);
+    public Viaje cancelarViaje(@PathVariable Long id) {
+        return viajeService.cancelarViaje(id);
     }
+
 }

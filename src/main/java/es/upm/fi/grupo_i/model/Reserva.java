@@ -78,10 +78,6 @@ public class Reserva {
         return idPago;
     }
 
-    public void marcarProvisional() {
-        this.estado = ESTADO_RESERVA.PROVISIONAL;
-    }
-
     public void confirmar() {
         this.estado = ESTADO_RESERVA.CONFIRMADA;
     }

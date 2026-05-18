@@ -7,15 +7,15 @@ public class PagosFake {
 
     private Long secuenciaPagos = 1L;
 
-    public Long procesarPago(Long viajeId, Long pasajeroId, int numeroPasajeros) {
+    public Long procesarPago(Long viajeId, Long pasajeroId, int numeroPasajeros, String datosPago) {
         return secuenciaPagos++;
     }
 
-    public boolean procesarDevolucion(Long idReserva) {
+    public boolean procesarDevolucion(Long reservaId) {
         return true;
     }
 
-    public Double calcularImporteDevolucion() {
+    public Double calcularImporteDevolucion(Long reservaId) {
         return 0.0;
     }
 }

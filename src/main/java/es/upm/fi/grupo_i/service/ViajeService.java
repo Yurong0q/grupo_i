@@ -1,6 +1,7 @@
 package es.upm.fi.grupo_i.service;
 
-import java.util.Optional;
+
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import es.upm.fi.grupo_i.enums.ESTADO_VIAJE;
+import es.upm.fi.grupo_i.model.Reserva;
 import es.upm.fi.grupo_i.model.Viaje;
 import es.upm.fi.grupo_i.repository.ViajeRepository;
 
@@ -16,11 +18,15 @@ import es.upm.fi.grupo_i.repository.ViajeRepository;
 public class ViajeService {
 
     private final ViajeRepository viajeRepository;
+    private final ReservaService reservaService;
     private final NotificacionesFake notificacionesFake;
+    private final PagosFake pagosFake;
 
-    public ViajeService(ViajeRepository viajeRepository, NotificacionesFake notificacionesFake) {
+    public ViajeService(ViajeRepository viajeRepository, ReservaService reservaService, NotificacionesFake notificacionesFake, PagosFake pagosFake) {
         this.viajeRepository = viajeRepository;
+        this.reservaService = reservaService;
         this.notificacionesFake = notificacionesFake;
+        this.pagosFake = pagosFake;
     }
 
     // Todos los viajes
@@ -32,12 +38,7 @@ public class ViajeService {
         return viajes;
     }
 
-    // Viaje por ID
-    public Optional<Viaje> obtenerViaje(Long id) {
-        return viajeRepository.findById(id);
-    }
-
-    public Viaje obtenerViajeObligatorio(Long id) {
+    public Viaje obtenerViaje(Long id) {
     return viajeRepository.findById(id)
         .orElseThrow(() -> new ResponseStatusException(
             HttpStatus.NOT_FOUND,
@@ -115,25 +116,29 @@ public class ViajeService {
         return viajeRepository.save(viaje);
     }
 
-    public void cancelarViaje(Long id) {
-        Viaje viaje = viajeRepository.findById(id)
-            .orElseThrow(() -> new ResponseStatusException( //Si no lo encuentro 
-                HttpStatus.NOT_FOUND,
-                "No existe un viaje con id " + id
-            ));
+    public Viaje cancelarViaje(Long viajeId) {
+        Viaje viaje = obtenerViaje(viajeId);
 
+        List<Reserva> reservas = reservaService.obtenerReservasPorViaje(viajeId);
+        
+        for (Reserva reserva:reservas){
+            pagosFake.calcularImporteDevolucion(viajeId);
+            reservaService.cancelarReserva(reserva.getId());
+        }
+        
         viaje.setEstado(ESTADO_VIAJE.CANCELADO);
-        notificacionesFake.notificarCancelacionViaje(id);
+        notificacionesFake.notificarCancelacionViaje(viajeId);
         viajeRepository.save(viaje);
+        return viaje;
     }
 
     public boolean hayPlazasDisponibles(Long idViaje, int numeroPasajeros) {
-        Viaje viaje = obtenerViajeObligatorio(idViaje);
+        Viaje viaje = obtenerViaje(idViaje);
         return viaje.getPlazasDisponibles() >= numeroPasajeros;
     }
 
     public void ocuparPlazas(Long idViaje, int numeroPasajeros) {
-        Viaje viaje = obtenerViajeObligatorio(idViaje);
+        Viaje viaje = obtenerViaje(idViaje);
 
         if (viaje.getPlazasDisponibles() < numeroPasajeros) {
             throw new ResponseStatusException(
@@ -147,18 +152,23 @@ public class ViajeService {
     }
 
     public void liberarPlazas(Long idViaje, int numeroPasajeros) {
-        Viaje viaje = obtenerViajeObligatorio(idViaje);
+        Viaje viaje = obtenerViaje(idViaje);
         viaje.liberarPlazas(numeroPasajeros);
         viajeRepository.save(viaje);
     }
   
-    public boolean comprobarViajeFinalizado(Long id) {
-        Viaje viaje = viajeRepository.findById(id)
-            .orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND,
-                "No existe un viaje con id " + id
-            ));
-
+    public boolean comprobarViajeFinalizado(Long idViaje) {
+        Viaje viaje = obtenerViaje(idViaje);
         return viaje.getEstado() == ESTADO_VIAJE.FINALIZADO;
+    }
+
+    public int comprobarDisponibilidad(Long viajeId){
+        Viaje viaje = obtenerViaje(viajeId);
+        return viaje.getPlazasDisponibles();
+    }
+
+    public boolean comprobarConductorDistintoDePasajero(Long viajeId, Long pasajeroId){
+        Viaje viaje = obtenerViaje(viajeId);
+        return viaje.getConductorId() != pasajeroId;
     }
 }
