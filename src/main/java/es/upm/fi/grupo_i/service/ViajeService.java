@@ -44,7 +44,7 @@ public class ViajeService {
         ));
     }
 
-    public Viaje crearViaje(Viaje viaje) {
+    public void crearViaje(Viaje viaje) {
         if (viaje.getId() != null) {
             throw new ResponseStatusException(
                 HttpStatus.BAD_REQUEST,
@@ -111,7 +111,7 @@ public class ViajeService {
         }
         
         notificacionesFake.notificarViajeCreado(viaje.getId());
-        return viajeRepository.save(viaje);
+        viajeRepository.save(viaje);
     }
 
     public Viaje cancelarViaje(ReservaService reservaService, Long viajeId) {

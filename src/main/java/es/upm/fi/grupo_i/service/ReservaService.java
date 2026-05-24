@@ -39,7 +39,7 @@ public class ReservaService {
             ));
     }
 
-    public Reserva procesarReserva(Long viajeId, Long pasajeroId, int numPasajeros, String datosPago) {
+    public void procesarReserva(Long viajeId, Long pasajeroId, int numPasajeros, String datosPago) {
         
         if (viajeId == null) {
             throw new ResponseStatusException(
@@ -85,10 +85,9 @@ public class ReservaService {
         reservasRepository.save(reserva);
         viajeService.ocuparPlazas(viajeId , numPasajeros);
         notificacionesFake.notificarReservaConfirmada(reserva.getId());
-        return reserva;
     }
 
-    public Reserva cancelarReserva(Long reservaId) {
+    public void cancelarReserva(Long reservaId) {
         Reserva reserva = obtenerReserva(reservaId);
         if (!reserva.esCancelable()) {
             throw new ResponseStatusException(
@@ -101,7 +100,6 @@ public class ReservaService {
         pagosFake.procesarDevolucion(reservaId);
         viajeService.liberarPlazas(reserva.getViajeId(),reserva.getNumeroPasajeros());
         notificacionesFake.notificarCancelacionReserva(reservaId);
-        return reserva;
     }
 
     public boolean comprobarReservaValida(Long viajeId, Long autorId) {

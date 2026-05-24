@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.upm.fi.grupo_i.dto.ReservaDto;
+import es.upm.fi.grupo_i.mapper.ReservaMapper;
 import es.upm.fi.grupo_i.model.Reserva;
 import es.upm.fi.grupo_i.service.ReservaService;
 
@@ -21,36 +23,40 @@ import es.upm.fi.grupo_i.service.ReservaService;
 public class ReservasController {
 
     private final ReservaService reservaService;
+    private final ReservaMapper reservaMapper;
 
-    public ReservasController(ReservaService reservaService) {
+    public ReservasController(ReservaService reservaService, ReservaMapper reservaMapper) {
         this.reservaService = reservaService;
+        this.reservaMapper = reservaMapper;
     }
 
     @GetMapping("/reservas/{id}")
-    public Reserva obtenerReserva(@PathVariable Long id) {
-        return reservaService.obtenerReserva(id);
+    public ReservaDto obtenerReserva(@PathVariable Long id) {
+        Reserva reserva = reservaService.obtenerReserva(id);
+        return reservaMapper.toDto(reserva);
     }
 
     @GetMapping("/reservas")
-    public Page<Reserva> obtenerReservasUsuario(
+    public Page<ReservaDto> obtenerReservasUsuario(
         @PathVariable("usuario-id") Long usuarioId,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size) {
         
         Pageable pageable = PageRequest.of(page, size);
 
-        return reservaService.obtenerReservasUsuario(usuarioId, pageable);
+        Page<Reserva> reservas= reservaService.obtenerReservasUsuario(usuarioId, pageable);
+        return reservas.map(reservaMapper::toDto);
     }
 
     @PostMapping("/reservas")
     @ResponseStatus(HttpStatus.CREATED)
-    public Reserva procesarReserva(@PathVariable Long viajeId, Long pasajeroId, int numPasajeros, String datosPago) {
-        return reservaService.procesarReserva(viajeId, pasajeroId, numPasajeros, datosPago);
+    public void procesarReserva(@PathVariable Long viajeId, Long pasajeroId, int numPasajeros, String datosPago) {
+        reservaService.procesarReserva(viajeId, pasajeroId, numPasajeros, datosPago);
     }
 
     @DeleteMapping("/reservas/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Reserva cancelarReserva(@PathVariable Long id) {
-        return reservaService.cancelarReserva(id);
+    public void cancelarReserva(@PathVariable Long id) {
+        reservaService.cancelarReserva(id);
     }
 }

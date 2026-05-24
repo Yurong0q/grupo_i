@@ -30,23 +30,14 @@ public class UsuarioController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Usuario registrar(@RequestBody Usuario usuario) {
-        return usuarioService.signUp(usuario);
+    public void registrar(@RequestBody Usuario usuario) {
+        usuarioService.signUp(usuario);
     }
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.CREATED)
-    public Usuario login(@RequestBody Usuario usuario) {
-        return usuarioService.logIn(usuario.getEmail(), usuario.getPassword());
+    public void login(@RequestBody Usuario usuario) {
+        usuarioService.logIn(usuario.getEmail(), usuario.getPassword());
     }
 
-    // @GetMapping("/{usuario-id}/reservas")
-    // public List<Reserva> obtenerReservasUsuario(@PathVariable("usuario-id") Long usuarioId) {
-    //     return usuarioService.obtenerReservasUsuario(usuarioId);
-    // }
-
-    // @GetMapping("/{usuario-id}/resenyas")
-    // public List<Resenya> obtenerResenyasUsuario(@PathVariable("usuario-id") Long usuarioId) {
-    //     return usuarioService.obtenerResenyasUsuario(usuarioId);
-    // }
 }

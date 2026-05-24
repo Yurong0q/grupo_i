@@ -7,7 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-// import es.upm.fi.grupo_i.dto.ViajeDto;
+import es.upm.fi.grupo_i.dto.ViajeDto;
+import es.upm.fi.grupo_i.mapper.ViajeMapper;
 import es.upm.fi.grupo_i.model.Viaje;
 import es.upm.fi.grupo_i.service.ReservaService;
 import es.upm.fi.grupo_i.service.ViajeService;
@@ -17,10 +18,12 @@ public class ViajeController {
     
     private final ViajeService viajeService;
     private final ReservaService reservaService;
+    private final ViajeMapper viajeMapper;
 
-    public ViajeController(ViajeService viajeService, ReservaService reservaService) {
+    public ViajeController(ViajeService viajeService, ReservaService reservaService, ViajeMapper viajeMapper) {
         this.viajeService = viajeService;
         this.reservaService = reservaService;
+        this.viajeMapper = viajeMapper;
     }
 
     @GetMapping("/viajes")
@@ -34,17 +37,17 @@ public class ViajeController {
     }
 
     @GetMapping("/viajes/{id}")
-    public Viaje obtenerViaje(@PathVariable Long id) {
-        return viajeService.obtenerViaje(id);
+    public ViajeDto obtenerViaje(@PathVariable Long id) {
+        Viaje viaje = viajeService.obtenerViaje(id);
+        return viajeMapper.toDto(viaje);
     }
 
     @PostMapping("/viajes")
     @ResponseStatus(HttpStatus.CREATED)
-    public Viaje crearViaje(@RequestBody Viaje viaje) {
-        return viajeService.crearViaje(viaje);
+    public void crearViaje(@RequestBody Viaje viaje) {
+        viajeService.crearViaje(viaje);
     }
 
-    
     @DeleteMapping("/viajes/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public Viaje cancelarViaje(@PathVariable Long id) {
