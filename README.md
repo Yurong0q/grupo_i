@@ -1,0 +1,1 @@
+El método usado para la realización de tests de los Casos de Uso ha sido la herramienta Swagger. Para acceder a la UI, ejecutar el código y acceder a la siguiente URL: http://localhost:8080/swagger-ui/index.html
