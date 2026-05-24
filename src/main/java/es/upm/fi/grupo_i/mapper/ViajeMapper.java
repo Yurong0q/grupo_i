@@ -9,11 +9,12 @@ import es.upm.fi.grupo_i.dto.ViajeDto;
 import es.upm.fi.grupo_i.model.Viaje;
 
 @Mapper(componentModel = "spring")
-public interface ViajeMapper {
+public abstract class ViajeMapper {
 
-    ViajeDto toDto(Viaje viaje);
+    public abstract ViajeDto toDto(Viaje viaje);
 
-    List<ViajeDto> toDtoList(List<Viaje> viajes);
+    public abstract List<ViajeDto> toDtoList(List<Viaje> viajes);
 
-    Viaje toEntity(ViajeCreateDto dto);
+    public abstract Viaje toEntity(ViajeCreateDto dto);
+    
 }
