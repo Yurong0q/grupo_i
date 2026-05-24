@@ -9,15 +9,18 @@ import org.springframework.web.bind.annotation.*;
 
 // import es.upm.fi.grupo_i.dto.ViajeDto;
 import es.upm.fi.grupo_i.model.Viaje;
+import es.upm.fi.grupo_i.service.ReservaService;
 import es.upm.fi.grupo_i.service.ViajeService;
 
 @RestController
 public class ViajeController {
     
     private final ViajeService viajeService;
-    
-    public ViajeController(ViajeService viajeService) {
+    private final ReservaService reservaService;
+
+    public ViajeController(ViajeService viajeService, ReservaService reservaService) {
         this.viajeService = viajeService;
+        this.reservaService = reservaService;
     }
 
     @GetMapping("/viajes")
@@ -45,7 +48,7 @@ public class ViajeController {
     @DeleteMapping("/viajes/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public Viaje cancelarViaje(@PathVariable Long id) {
-        return viajeService.cancelarViaje(id);
+        return viajeService.cancelarViaje(reservaService,id);
     }
 
 }

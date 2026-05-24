@@ -18,13 +18,11 @@ import es.upm.fi.grupo_i.repository.ViajeRepository;
 public class ViajeService {
 
     private final ViajeRepository viajeRepository;
-    private final ReservaService reservaService;
     private final NotificacionesFake notificacionesFake;
     private final PagosFake pagosFake;
 
-    public ViajeService(ViajeRepository viajeRepository, ReservaService reservaService, NotificacionesFake notificacionesFake, PagosFake pagosFake) {
+    public ViajeService(ViajeRepository viajeRepository, NotificacionesFake notificacionesFake, PagosFake pagosFake) {
         this.viajeRepository = viajeRepository;
-        this.reservaService = reservaService;
         this.notificacionesFake = notificacionesFake;
         this.pagosFake = pagosFake;
     }
@@ -116,7 +114,7 @@ public class ViajeService {
         return viajeRepository.save(viaje);
     }
 
-    public Viaje cancelarViaje(Long viajeId) {
+    public Viaje cancelarViaje(ReservaService reservaService, Long viajeId) {
         Viaje viaje = obtenerViaje(viajeId);
 
         List<Reserva> reservas = reservaService.obtenerReservasPorViaje(viajeId);
