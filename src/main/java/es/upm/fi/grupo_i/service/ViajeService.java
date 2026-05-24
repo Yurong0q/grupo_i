@@ -21,7 +21,11 @@ public class ViajeService {
     private final NotificacionesFake notificacionesFake;
     private final PagosFake pagosFake;
 
-    public ViajeService(ViajeRepository viajeRepository, NotificacionesFake notificacionesFake, PagosFake pagosFake) {
+    public ViajeService(
+        ViajeRepository viajeRepository,  
+        NotificacionesFake notificacionesFake, 
+        PagosFake pagosFake) {
+
         this.viajeRepository = viajeRepository;
         this.notificacionesFake = notificacionesFake;
         this.pagosFake = pagosFake;
@@ -29,9 +33,9 @@ public class ViajeService {
 
     // Todos los viajes
     public Page<Viaje> obtenerViajes(String destino, Pageable pageable) {
-        Page<Viaje> viajes = (destino == null || destino.isBlank())
-            ? viajeRepository.findAll(pageable)
-            : viajeRepository.findByDestino(destino, pageable);
+        Page<Viaje> viajes = (destino == null || destino.isBlank())? 
+            viajeRepository.findAll(pageable): 
+            viajeRepository.findByDestino(destino, pageable);
 
         return viajes;
     }
@@ -59,12 +63,8 @@ public class ViajeService {
             );
         }
 
-        if (viaje.getEstado() != ESTADO_VIAJE.ACTIVO) {
-            throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST,
-                "El estado del viaje debe ser ACTIVO al crearlo"
-            );
-
+        if (viaje.getEstado() == null) {
+            viaje.setEstado(ESTADO_VIAJE.ACTIVO);
         }
 
         if (viaje.getOrigen() == null || viaje.getOrigen().isBlank()) {
@@ -110,17 +110,20 @@ public class ViajeService {
 
         }
         
-        notificacionesFake.notificarViajeCreado(viaje.getId());
-        return viajeRepository.save(viaje);
+        Viaje creado = viajeRepository.save(viaje);
+        notificacionesFake.notificarViajeCreado(creado.getId());
+        return creado;
     }
 
-    public Viaje cancelarViaje(ReservaService reservaService, Long viajeId) {
+    public Viaje cancelarViaje(Long viajeId, ReservaService reservaService) {
         Viaje viaje = obtenerViaje(viajeId);
 
         List<Reserva> reservas = reservaService.obtenerReservasPorViaje(viajeId);
         
         for (Reserva reserva:reservas){
             pagosFake.calcularImporteDevolucion(viajeId);
+            pagosFake.realizarPagoCorrespondiente(viajeId, viaje.getConductorId(), null);
+            pagosFake.procesarDevolucion(viajeId);
             reservaService.cancelarReserva(reserva.getId());
         }
         
@@ -154,7 +157,7 @@ public class ViajeService {
         viaje.liberarPlazas(numeroPasajeros);
         viajeRepository.save(viaje);
     }
-  
+
     public boolean comprobarViajeFinalizado(Long idViaje) {
         Viaje viaje = obtenerViaje(idViaje);
         return viaje.getEstado() == ESTADO_VIAJE.FINALIZADO;
@@ -167,6 +170,6 @@ public class ViajeService {
 
     public boolean comprobarConductorDistintoDePasajero(Long viajeId, Long pasajeroId){
         Viaje viaje = obtenerViaje(viajeId);
-        return viaje.getConductorId() != pasajeroId;
+        return !viaje.getConductorId().equals(pasajeroId);
     }
 }
