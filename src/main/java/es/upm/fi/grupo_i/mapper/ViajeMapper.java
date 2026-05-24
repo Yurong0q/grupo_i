@@ -1,6 +1,6 @@
 package es.upm.fi.grupo_i.mapper;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.mapstruct.Mapper;
 
@@ -13,7 +13,9 @@ public abstract class ViajeMapper {
 
     public abstract ViajeDto toDto(Viaje viaje);
 
-    public abstract List<ViajeDto> toDtoList(List<Viaje> viajes);
+    public ViajeDto toDto(Optional<Viaje> viaje) {
+        return viaje.map(this::toDto).orElse(null);
+    }
 
     public abstract Viaje toEntity(ViajeCreateDto dto);
     

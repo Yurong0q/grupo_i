@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.upm.fi.grupo_i.dto.ResenyaDto;
+import es.upm.fi.grupo_i.mapper.ResenyaMapper;
 import es.upm.fi.grupo_i.model.Resenya;
 import es.upm.fi.grupo_i.service.ResenyaService;
 
@@ -17,25 +19,28 @@ import es.upm.fi.grupo_i.service.ResenyaService;
 @RequestMapping("/usuarios/{usuario-id}")
 public class ResenyaController {
     private final ResenyaService resenyaService;
+    private final ResenyaMapper resenyaMapper;
 
-    public ResenyaController(ResenyaService resenyaService) {
+    public ResenyaController(ResenyaService resenyaService, ResenyaMapper resenyaMapper) {
         this.resenyaService = resenyaService;
+        this.resenyaMapper = resenyaMapper;
     }
 
     @PostMapping("/resenyas")
-    public Resenya registrarResenya(Long viajeId, @PathVariable("usuario-id") Long autorId, int puntuacion, String comentario) {
-        return resenyaService.registrarResenya(viajeId, autorId, puntuacion, comentario);
+    public void registrarResenya(Long viajeId, @PathVariable("usuario-id") Long autorId, int puntuacion, String comentario) {
+        resenyaService.registrarResenya(viajeId, autorId, puntuacion, comentario);
     }
 
     //Paginacion de resenyas de un usuario
     @GetMapping("/resenyas")
-    public Page<Resenya> obtenerResenyasUsuario(
+    public Page<ResenyaDto> obtenerResenyasUsuario(
         @PathVariable("usuario-id") Long usuarioId,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size) {
 
         Pageable pageable = PageRequest.of(page, size);
         Page<Resenya> resenyas = resenyaService.obtenerResenyasUsuario(usuarioId, pageable);
-        return resenyas;
+
+        return resenyas.map(resenyaMapper::toDto);
     }
 }
