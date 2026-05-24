@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import es.upm.fi.grupo_i.dto.ViajeCreateDto;
 import es.upm.fi.grupo_i.dto.ViajeDto;
 import es.upm.fi.grupo_i.mapper.ViajeMapper;
+
 import es.upm.fi.grupo_i.model.Viaje;
 import es.upm.fi.grupo_i.service.ReservaService;
 import es.upm.fi.grupo_i.service.ViajeService;
@@ -20,11 +21,11 @@ public class ViajeController {
     private final ViajeService viajeService;
     private final ViajeMapper viajeMapper;
     private final ReservaService reservaService;
-    
-    public ViajeController(ViajeService viajeService, ViajeMapper viajeMapper, ReservaService reservaService) {
+
+    public ViajeController(ViajeService viajeService, ReservaService reservaService, ViajeMapper viajeMapper) {
         this.viajeService = viajeService;
-        this.viajeMapper = viajeMapper;
         this.reservaService = reservaService;
+        this.viajeMapper = viajeMapper;
     }
 
     @GetMapping("/viajes")
@@ -45,18 +46,15 @@ public class ViajeController {
 
     @PostMapping("/viajes")
     @ResponseStatus(HttpStatus.CREATED)
-    public ViajeDto crearViaje(@RequestBody ViajeCreateDto dto) {
+    public void crearViaje(@RequestBody ViajeCreateDto dto) {
         Viaje viaje = viajeMapper.toEntity(dto);
-        Viaje creado = viajeService.crearViaje(viaje);
-        return viajeMapper.toDto(creado);
+        viajeService.crearViaje(viaje);
     }
 
-    
     @DeleteMapping("/viajes/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ViajeDto cancelarViaje(@PathVariable Long id) {
-        Viaje cancelado = viajeService.cancelarViaje(id, reservaService);
-        return viajeMapper.toDto(cancelado);
+    public void cancelarViaje(@PathVariable Long id) {
+        viajeService.cancelarViaje(id, reservaService);
     }
 
 }
