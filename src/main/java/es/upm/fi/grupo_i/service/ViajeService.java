@@ -169,6 +169,6 @@ public class ViajeService {
 
     public boolean comprobarConductorDistintoDePasajero(Long viajeId, Long pasajeroId){
         Viaje viaje = obtenerViaje(viajeId);
-        return !viaje.getConductorId().equals(pasajeroId);
+        return viaje.getConductorId().equals(pasajeroId);
     }
 }

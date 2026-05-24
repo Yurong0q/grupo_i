@@ -50,7 +50,7 @@ public class ReservasController {
 
     @PostMapping("/reservas")
     @ResponseStatus(HttpStatus.CREATED)
-    public void procesarReserva(@PathVariable Long viajeId, Long pasajeroId, int numPasajeros, String datosPago) {
+    public void procesarReserva(Long viajeId, Long pasajeroId, int numPasajeros, String datosPago) {
         reservaService.procesarReserva(viajeId, pasajeroId, numPasajeros, datosPago);
     }
 

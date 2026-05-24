@@ -23,7 +23,7 @@ public class ResenyaController {
     }
 
     @PostMapping("/resenyas")
-    public Resenya registrarResenya(Long viajeId, Long autorId, int puntuacion, String comentario) {
+    public Resenya registrarResenya(Long viajeId, @PathVariable("usuario-id") Long autorId, int puntuacion, String comentario) {
         return resenyaService.registrarResenya(viajeId, autorId, puntuacion, comentario);
     }
 
