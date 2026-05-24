@@ -10,7 +10,7 @@ import es.upm.fi.grupo_i.model.Usuario;
 import es.upm.fi.grupo_i.repository.UsuarioRepository;
 
 @Service
-public class UsuarioService { //TODO implementar Jwt
+public class UsuarioService { 
 
     private final UsuarioRepository usuarioRepository;
 
@@ -42,7 +42,7 @@ public class UsuarioService { //TODO implementar Jwt
         return usuarioRepository.save(usuario);
     }
 
-    public Usuario logIn(String email, String password) { //TODO estar logeado para cambiar contraseña, reservar, reseñar, y crear un viaje
+    public Usuario logIn(String email, String password) { 
         if (email == null || password == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email y contraseña son obligatorios");
         }
@@ -64,11 +64,4 @@ public class UsuarioService { //TODO implementar Jwt
         return usuarioRepository.save(usuario);
     }
 
-    // public List<Reserva> obtenerReservasUsuario(Long usuarioId) {
-    //     return reservaService.obtenerReservasUsuario(usuarioId);
-    // }
-
-    // public List<Resenya> obtenerResenyasUsuario(Long usuarioId) {
-    //     return resenyaService.obtenerResenyasUsuario(usuarioId);
-    // }
 }
