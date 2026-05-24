@@ -7,11 +7,15 @@ public class PagosFake {
 
     private Long secuenciaPagos = 1L;
 
-    public Long procesarPago(Long viajeId, Long pasajeroId, int numeroPasajeros, String datosPago) {
+    public Long procesarPago(Long viajeId, Long pasajeroId, int numeroPasajeros, String datosPago) { // Para comprar reserva
         return secuenciaPagos++;
     }
 
     public boolean procesarDevolucion(Long reservaId) {
+        return true;
+    }
+
+    public boolean realizarPagoCorrespondiente(Long importe, Long idConductor, String datosPago){ // Para cancelar viaje
         return true;
     }
 

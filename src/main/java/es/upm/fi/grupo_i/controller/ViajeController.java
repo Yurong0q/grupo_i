@@ -7,8 +7,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import es.upm.fi.grupo_i.dto.ViajeCreateDto;
 import es.upm.fi.grupo_i.dto.ViajeDto;
 import es.upm.fi.grupo_i.mapper.ViajeMapper;
+
 import es.upm.fi.grupo_i.model.Viaje;
 import es.upm.fi.grupo_i.service.ReservaService;
 import es.upm.fi.grupo_i.service.ViajeService;
@@ -17,8 +19,8 @@ import es.upm.fi.grupo_i.service.ViajeService;
 public class ViajeController {
     
     private final ViajeService viajeService;
-    private final ReservaService reservaService;
     private final ViajeMapper viajeMapper;
+    private final ReservaService reservaService;
 
     public ViajeController(ViajeService viajeService, ReservaService reservaService, ViajeMapper viajeMapper) {
         this.viajeService = viajeService;
@@ -27,13 +29,13 @@ public class ViajeController {
     }
 
     @GetMapping("/viajes")
-    public Page<Viaje> obtenerViajes(
+    public Page<ViajeDto> obtenerViajes(
         @RequestParam(required = false) String destino,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        return viajeService.obtenerViajes(destino, pageable);
+        return viajeService.obtenerViajes(destino, pageable).map(viajeMapper::toDto);
     }
 
     @GetMapping("/viajes/{id}")
@@ -44,14 +46,15 @@ public class ViajeController {
 
     @PostMapping("/viajes")
     @ResponseStatus(HttpStatus.CREATED)
-    public void crearViaje(@RequestBody Viaje viaje) {
+    public void crearViaje(@RequestBody ViajeCreateDto dto) {
+        Viaje viaje = viajeMapper.toEntity(dto);
         viajeService.crearViaje(viaje);
     }
 
     @DeleteMapping("/viajes/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Viaje cancelarViaje(@PathVariable Long id) {
-        return viajeService.cancelarViaje(reservaService,id);
+    public void cancelarViaje(@PathVariable Long id) {
+        viajeService.cancelarViaje(id, reservaService);
     }
 
 }
